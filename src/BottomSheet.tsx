@@ -28,8 +28,12 @@ import GeminiSvg from './GeminiSvg';
 import ChevronDown from './ChevronDownSvg';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('screen');
-const BotChat =
-  'delay Function: The delay function takes the delay time in milliseconds (ms) as an argument.';
+const BotChat = [
+  'delay Function: The delay function takes the delay time in milliseconds (ms) as an argument.',
+  'The purpose of SafeAreaView is to render content within the safe area boundaries of a device. It is currently only applicable to iOS devices with iOS version 11 or later.',
+  'To use, wrap your top level view with a SafeAreaView with a flex: 1 style applied to it. You may also want to use a background color that matches your application',
+  'Keep in mind that ScrollViews must have a bounded height in order to work, since they contain unbounded-height children into a bounded container (via a scroll interaction). In order to bound the height of a ScrollView, either set the height of the view directly (discouraged) or make sure all parent views have bounded height. Forgetting to transfer',
+];
 const BOTTOM_SHEET_HEIGHT = {
   min: 0,
   mid: SCREEN_HEIGHT * 0.6,
@@ -223,6 +227,15 @@ const BottomSheet = forwardRef<IBottomSheetRed>((_, ref) => {
   const [chat, setChat] = useState<string[]>([]);
 
   /**
+   * Generates a number value between min and max
+   * @param min - minimum value
+   * @param max - maximum value
+   * @returns a - number between min and max values
+   */
+  const generateRandomNumber = (min: number, max: number) =>
+    Math.floor(Math.random() * (max - min + 1)) + min;
+
+  /**
    * Handles submitting the user input and simulates a bot response.
    */
   const submitQuestion = async () => {
@@ -230,12 +243,15 @@ const BottomSheet = forwardRef<IBottomSheetRed>((_, ref) => {
     setChat(newChat);
     setText('');
 
+    const randomNumber = generateRandomNumber(1000, 4000);
+    const botText = generateRandomNumber(0, BotChat.length - 1);
+
     setIsLoading(true);
     await new Promise<void>(resolve =>
       setTimeout(() => {
-        newChat.push(BotChat);
+        newChat.push(BotChat[botText]);
         resolve();
-      }, 3000),
+      }, randomNumber),
     );
 
     setIsLoading(false);
@@ -434,7 +450,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    marginBottom: 80,
+    marginBottom: 100,
   },
   scrollContainer: {
     flex: 1,
