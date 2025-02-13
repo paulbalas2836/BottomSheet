@@ -62,6 +62,11 @@ const BottomSheet = forwardRef<IBottomSheetRed>((_, ref) => {
   const startPositionRef = useRef(0);
   const [shouldHideInput, setShouldHideInput] = useState(false);
 
+  useImperativeHandle(ref, () => ({
+    expand: open,
+    expandFull: openFull,
+    collapse: close,
+  }));
   const insets = useSafeAreaInsets();
 
   /**
@@ -260,6 +265,7 @@ const BottomSheet = forwardRef<IBottomSheetRed>((_, ref) => {
    */
   const handleScroll = (event: any) => {
     const {layoutMeasurement, contentOffset, contentSize} = event.nativeEvent;
+
     const isBottom =
       layoutMeasurement.height + contentOffset.y >=
       contentSize.height - layoutMeasurement.height;
@@ -290,7 +296,7 @@ const BottomSheet = forwardRef<IBottomSheetRed>((_, ref) => {
   };
 
   const disableButton = !isText || isLoading;
-  const arrowColor = disableButton ? 'blue' : 'gray';
+  const arrowColor = disableButton ? 'gray' : 'blue';
   const bottomSheetHeight = isFullHeight
     ? '100%'
     : BOTTOM_SHEET_HEIGHT.mid - inputHeight;
@@ -403,6 +409,7 @@ const BottomSheet = forwardRef<IBottomSheetRed>((_, ref) => {
 export default BottomSheet;
 
 const styles = StyleSheet.create({
+  loaderContainer: {gap: 10},
   scrollBottomContainer: {
     position: 'absolute',
     width: 40,
@@ -424,10 +431,6 @@ const styles = StyleSheet.create({
     elevation: 10,
     padding: 12,
     borderRadius: 99,
-  },
-
-  loaderContainer: {
-    gap: 10,
   },
   container: {
     flex: 1,
